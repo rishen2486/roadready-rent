@@ -26,7 +26,9 @@ export default {
 				foreground: 'hsl(var(--foreground))',
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+					foreground: 'hsl(var(--primary-foreground))',
+					light: 'hsl(var(--primary-light))',
+					dark: 'hsl(var(--primary-dark))'
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
@@ -42,7 +44,8 @@ export default {
 				},
 				accent: {
 					DEFAULT: 'hsl(var(--accent))',
-					foreground: 'hsl(var(--accent-foreground))'
+					foreground: 'hsl(var(--accent-foreground))',
+					light: 'hsl(var(--accent-light))'
 				},
 				popover: {
 					DEFAULT: 'hsl(var(--popover))',
@@ -67,6 +70,25 @@ export default {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
+			},
+			fontFamily: {
+				sans: ['Inter', 'system-ui', 'sans-serif'],
+				display: ['Inter', 'system-ui', 'sans-serif'],
+			},
+			boxShadow: {
+				'luxury': 'var(--shadow-luxury)',
+				'elegant': 'var(--shadow-elegant)',
+				'card': 'var(--shadow-card)',
+			},
+			backgroundImage: {
+				'gradient-primary': 'var(--gradient-primary)',
+				'gradient-luxury': 'var(--gradient-luxury)',
+				'gradient-hero': 'var(--gradient-hero)',
+				'gradient-card': 'var(--gradient-card)',
+			},
+			transitionTimingFunction: {
+				'smooth': 'cubic-bezier(0.4, 0, 0.2, 1)',
+				'bounce': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
 			},
 			keyframes: {
 				'accordion-down': {
