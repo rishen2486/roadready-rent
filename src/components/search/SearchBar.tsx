@@ -106,7 +106,8 @@ const SearchBar = ({ onSearch, className }: SearchBarProps) => {
         {/* Search Button */}
         <Button 
           onClick={handleSearch}
-          className="premium-button h-10"
+          variant="premium"
+          className="h-10"
           size="lg"
         >
           <Search className="h-4 w-4 mr-2" />

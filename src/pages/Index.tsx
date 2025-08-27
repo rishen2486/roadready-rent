@@ -89,7 +89,7 @@ const Index = () => {
           </div>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="premium-button text-lg px-8 py-6" asChild>
+            <Button size="lg" variant="premium" className="text-lg px-8 py-6" asChild>
               <Link to="/cars">
                 Browse All Cars
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -191,7 +191,7 @@ const Index = () => {
           <p className="text-xl text-white/90 mb-8">
             Join thousands of satisfied customers who trust CarsRus Rental for their transportation needs.
           </p>
-          <Button size="lg" className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6">
+          <Button size="lg" className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6" asChild>
             <Link to="/cars">
               Start Your Journey
               <ArrowRight className="ml-2 h-5 w-5" />

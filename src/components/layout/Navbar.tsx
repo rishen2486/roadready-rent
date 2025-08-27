@@ -60,7 +60,7 @@ const Navbar = () => {
                 Login
               </Link>
             </Button>
-            <Button size="sm" className="premium-button" asChild>
+            <Button size="sm" variant="premium" asChild>
               <Link to="/admin">
                 <Settings className="h-4 w-4 mr-2" />
                 Admin
@@ -107,7 +107,7 @@ const Navbar = () => {
                     Login
                   </Link>
                 </Button>
-                <Button size="sm" className="premium-button w-full" asChild>
+                <Button size="sm" variant="premium" className="w-full" asChild>
                   <Link to="/admin" onClick={() => setIsMobileMenuOpen(false)}>
                     <Settings className="h-4 w-4 mr-2" />
                     Admin

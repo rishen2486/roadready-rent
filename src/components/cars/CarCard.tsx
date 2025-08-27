@@ -95,7 +95,7 @@ const CarCard = ({ car }: CarCardProps) => {
             <span className="text-sm font-normal text-muted-foreground">/day</span>
           </div>
         </div>
-        <Button asChild className="premium-button">
+        <Button asChild variant="premium">
           <Link to={`/cars/${car.id}`}>
             View Details
           </Link>
