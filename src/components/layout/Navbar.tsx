@@ -62,6 +62,11 @@ const Navbar = () => {
                 Login
               </Link>
             </Button>
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/signup">
+                Sign Up
+              </Link>
+            </Button>
             <Button size="sm" variant="premium" asChild>
               <Link to="/admin">
                 <Settings className="h-4 w-4 mr-2" />
@@ -107,6 +112,11 @@ const Navbar = () => {
                   <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
                     <User className="h-4 w-4 mr-2" />
                     Login
+                  </Link>
+                </Button>
+                <Button variant="outline" size="sm" className="w-full" asChild>
+                  <Link to="/signup" onClick={() => setIsMobileMenuOpen(false)}>
+                    Sign Up
                   </Link>
                 </Button>
                 <Button size="sm" variant="premium" className="w-full" asChild>
