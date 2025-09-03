@@ -97,7 +97,7 @@ const CarCard = ({ car }: CarCardProps) => {
         </div>
         <Button asChild variant="premium">
           <Link to={`/cars/${car.id}`}>
-            View Details
+            Book now
           </Link>
         </Button>
       </CardFooter>
