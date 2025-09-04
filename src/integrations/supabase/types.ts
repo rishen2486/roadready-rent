@@ -14,6 +14,146 @@ export type Database = {
   }
   public: {
     Tables: {
+      bookings: {
+        Row: {
+          car_id: string | null
+          created_at: string | null
+          customer_email: string
+          customer_name: string
+          customer_phone: string | null
+          dropoff_location: string
+          end_date: string
+          id: string
+          payment_status: string | null
+          pickup_location: string
+          start_date: string
+          total_amount: number
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          car_id?: string | null
+          created_at?: string | null
+          customer_email: string
+          customer_name: string
+          customer_phone?: string | null
+          dropoff_location: string
+          end_date: string
+          id?: string
+          payment_status?: string | null
+          pickup_location: string
+          start_date: string
+          total_amount: number
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          car_id?: string | null
+          created_at?: string | null
+          customer_email?: string
+          customer_name?: string
+          customer_phone?: string | null
+          dropoff_location?: string
+          end_date?: string
+          id?: string
+          payment_status?: string | null
+          pickup_location?: string
+          start_date?: string
+          total_amount?: number
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_car_id_fkey"
+            columns: ["car_id"]
+            isOneToOne: false
+            referencedRelation: "cars"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      car_availability: {
+        Row: {
+          booking_id: string | null
+          car_id: string | null
+          created_at: string | null
+          end_date: string
+          google_event_id: string | null
+          id: string
+          start_date: string
+        }
+        Insert: {
+          booking_id?: string | null
+          car_id?: string | null
+          created_at?: string | null
+          end_date: string
+          google_event_id?: string | null
+          id?: string
+          start_date: string
+        }
+        Update: {
+          booking_id?: string | null
+          car_id?: string | null
+          created_at?: string | null
+          end_date?: string
+          google_event_id?: string | null
+          id?: string
+          start_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "car_availability_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "car_availability_car_id_fkey"
+            columns: ["car_id"]
+            isOneToOne: false
+            referencedRelation: "cars"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cars: {
+        Row: {
+          available: boolean | null
+          created_at: string | null
+          description: string | null
+          features: string[] | null
+          id: string
+          image_url: string | null
+          name: string
+          price_per_day: number
+          updated_at: string | null
+        }
+        Insert: {
+          available?: boolean | null
+          created_at?: string | null
+          description?: string | null
+          features?: string[] | null
+          id?: string
+          image_url?: string | null
+          name: string
+          price_per_day: number
+          updated_at?: string | null
+        }
+        Update: {
+          available?: boolean | null
+          created_at?: string | null
+          description?: string | null
+          features?: string[] | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          price_per_day?: number
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string

@@ -8,40 +8,58 @@ interface CarCardProps {
   car: {
     id: string;
     name: string;
-    category: string;
-    image: string;
-    rating: number;
-    reviews: number;
-    passengers: number;
-    transmission: string;
-    fuel: string;
-    pricePerDay: number;
-    location: string;
-    features: string[];
+    category?: string;
+    image?: string;
+    image_url?: string;
+    rating?: number;
+    reviews?: number;
+    passengers?: number;
+    transmission?: string;
+    fuel?: string;
+    pricePerDay?: number;
+    price_per_day?: number;
+    location?: string;
+    features?: string[];
   };
+  onBookNow?: () => void;
 }
 
-const CarCard = ({ car }: CarCardProps) => {
+const CarCard = ({ car, onBookNow }: CarCardProps) => {
+  // Handle both old and new data structures
+  const imageUrl = car.image_url || car.image || 'https://images.unsplash.com/photo-1494976688153-9c302e0e1271?w=800&h=600&fit=crop';
+  const pricePerDay = car.price_per_day || car.pricePerDay || 99;
+  const features = car.features || [];
+  
+  const handleBookNow = () => {
+    if (onBookNow) {
+      onBookNow();
+    }
+  };
+
   return (
     <Card className="car-card overflow-hidden group">
       <div className="relative overflow-hidden">
         <img
-          src={car.image}
+          src={imageUrl}
           alt={car.name}
           className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700"
         />
-        <div className="absolute top-4 left-4">
-          <Badge variant="secondary" className="bg-background/80 backdrop-blur-sm">
-            {car.category}
-          </Badge>
-        </div>
-        <div className="absolute top-4 right-4">
-          <div className="flex items-center gap-1 bg-background/80 backdrop-blur-sm rounded-full px-2 py-1">
-            <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-            <span className="text-xs font-medium">{car.rating}</span>
-            <span className="text-xs text-muted-foreground">({car.reviews})</span>
+        {car.category && (
+          <div className="absolute top-4 left-4">
+            <Badge variant="secondary" className="bg-background/80 backdrop-blur-sm">
+              {car.category}
+            </Badge>
           </div>
-        </div>
+        )}
+        {car.rating && car.reviews && (
+          <div className="absolute top-4 right-4">
+            <div className="flex items-center gap-1 bg-background/80 backdrop-blur-sm rounded-full px-2 py-1">
+              <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+              <span className="text-xs font-medium">{car.rating}</span>
+              <span className="text-xs text-muted-foreground">({car.reviews})</span>
+            </div>
+          </div>
+        )}
       </div>
 
       <CardContent className="p-4">
@@ -50,37 +68,47 @@ const CarCard = ({ car }: CarCardProps) => {
             <h3 className="font-semibold text-lg text-foreground group-hover:text-primary transition-colors">
               {car.name}
             </h3>
-            <div className="flex items-center gap-1 text-sm text-muted-foreground">
-              <MapPin className="h-3 w-3" />
-              {car.location}
-            </div>
+            {car.location && (
+              <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                <MapPin className="h-3 w-3" />
+                {car.location}
+              </div>
+            )}
           </div>
 
-          <div className="flex items-center justify-between text-sm text-muted-foreground">
-            <div className="flex items-center gap-1">
-              <Users className="h-4 w-4" />
-              <span>{car.passengers} seats</span>
+          {(car.passengers || car.transmission || car.fuel) && (
+            <div className="flex items-center justify-between text-sm text-muted-foreground">
+              {car.passengers && (
+                <div className="flex items-center gap-1">
+                  <Users className="h-4 w-4" />
+                  <span>{car.passengers} seats</span>
+                </div>
+              )}
+              {car.transmission && (
+                <div className="flex items-center gap-1">
+                  <Gauge className="h-4 w-4" />
+                  <span>{car.transmission}</span>
+                </div>
+              )}
+              {car.fuel && (
+                <div className="flex items-center gap-1">
+                  <Fuel className="h-4 w-4" />
+                  <span>{car.fuel}</span>
+                </div>
+              )}
             </div>
-            <div className="flex items-center gap-1">
-              <Gauge className="h-4 w-4" />
-              <span>{car.transmission}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Fuel className="h-4 w-4" />
-              <span>{car.fuel}</span>
-            </div>
-          </div>
+          )}
 
-          {car.features.length > 0 && (
+          {features.length > 0 && (
             <div className="flex flex-wrap gap-1">
-              {car.features.slice(0, 3).map((feature, index) => (
+              {features.slice(0, 3).map((feature, index) => (
                 <Badge key={index} variant="outline" className="text-xs">
                   {feature}
                 </Badge>
               ))}
-              {car.features.length > 3 && (
+              {features.length > 3 && (
                 <Badge variant="outline" className="text-xs">
-                  +{car.features.length - 3} more
+                  +{features.length - 3} more
                 </Badge>
               )}
             </div>
@@ -91,14 +119,12 @@ const CarCard = ({ car }: CarCardProps) => {
       <CardFooter className="p-4 pt-0 flex items-center justify-between">
         <div className="text-left">
           <div className="text-2xl font-bold text-foreground">
-            ${car.pricePerDay}
+            ${pricePerDay}
             <span className="text-sm font-normal text-muted-foreground">/day</span>
           </div>
         </div>
-        <Button asChild variant="premium">
-          <Link to={`/cars/${car.id}`}>
-            Book now
-          </Link>
+        <Button variant="premium" onClick={handleBookNow}>
+          Book now
         </Button>
       </CardFooter>
     </Card>
