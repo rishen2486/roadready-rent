@@ -74,6 +74,12 @@ const Dashboard = () => {
           
           <div className="flex gap-3">
             <Button variant="outline" asChild>
+              <Link to="/admin/cars">
+                <Car className="h-4 w-4 mr-2" />
+                Manage Cars
+              </Link>
+            </Button>
+            <Button variant="outline" asChild>
               <Link to="/admin/bookings">
                 <Calendar className="h-4 w-4 mr-2" />
                 View Bookings

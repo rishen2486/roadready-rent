@@ -8,6 +8,9 @@ import Cars from "./pages/Cars";
 import Tours from "./pages/Tours";
 import Attractions from "./pages/Attractions";
 import Dashboard from "./pages/admin/Dashboard";
+import AddCar from "./pages/admin/AddCar";
+import CarList from "./pages/admin/CarList";
+import EditCar from "./pages/admin/EditCar";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import NotFound from "./pages/NotFound";
@@ -30,6 +33,9 @@ const App = () => (
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/admin" element={<Dashboard />} />
+          <Route path="/admin/add-car" element={<AddCar />} />
+          <Route path="/admin/cars" element={<CarList />} />
+          <Route path="/admin/edit-car/:id" element={<EditCar />} />
           <Route path="/booking/:id" element={<Booking />} />
           <Route path="/booking/:id/confirmation" element={<BookingConfirmation />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

@@ -121,35 +121,56 @@ export type Database = {
       cars: {
         Row: {
           available: boolean | null
+          brand: string | null
           created_at: string | null
           description: string | null
           features: string[] | null
           id: string
           image_url: string | null
+          large_bags: number | null
+          mileage: string | null
           name: string
+          photos: string[] | null
           price_per_day: number
+          seats: number | null
+          small_bags: number | null
+          transmission: string | null
           updated_at: string | null
         }
         Insert: {
           available?: boolean | null
+          brand?: string | null
           created_at?: string | null
           description?: string | null
           features?: string[] | null
           id?: string
           image_url?: string | null
+          large_bags?: number | null
+          mileage?: string | null
           name: string
+          photos?: string[] | null
           price_per_day: number
+          seats?: number | null
+          small_bags?: number | null
+          transmission?: string | null
           updated_at?: string | null
         }
         Update: {
           available?: boolean | null
+          brand?: string | null
           created_at?: string | null
           description?: string | null
           features?: string[] | null
           id?: string
           image_url?: string | null
+          large_bags?: number | null
+          mileage?: string | null
           name?: string
+          photos?: string[] | null
           price_per_day?: number
+          seats?: number | null
+          small_bags?: number | null
+          transmission?: string | null
           updated_at?: string | null
         }
         Relationships: []
