@@ -1,65 +1,81 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowRight, Star, Shield, Clock, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import SearchBar, { SearchFilters } from "@/components/search/SearchBar";
 import CarCard from "@/components/cars/CarCard";
+import { BookingForm } from "@/components/BookingForm";
 import Navbar from "@/components/layout/Navbar";
 import { Link } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
-// Mock data for featured cars
-const featuredCars = [
-  {
-    id: "1",
-    name: "BMW 3 Series",
-    category: "Luxury",
-    image: "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&q=80",
-    rating: 4.8,
-    reviews: 124,
-    passengers: 5,
-    transmission: "Automatic",
-    fuel: "Petrol",
-    pricePerDay: 85,
-    location: "Downtown",
-    features: ["GPS", "Bluetooth", "Premium Sound"],
-  },
-  {
-    id: "2",
-    name: "Tesla Model 3",
-    category: "Electric",
-    image: "https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=800&q=80",
-    rating: 4.9,
-    reviews: 89,
-    passengers: 5,
-    transmission: "Automatic",
-    fuel: "Electric",
-    pricePerDay: 95,
-    location: "Airport",
-    features: ["Autopilot", "Supercharging", "Premium Interior"],
-  },
-  {
-    id: "3",
-    name: "Audi Q7",
-    category: "SUV",
-    image: "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&q=80",
-    rating: 4.7,
-    reviews: 156,
-    passengers: 7,
-    transmission: "Automatic",
-    fuel: "Petrol",
-    pricePerDay: 120,
-    location: "City Center",
-    features: ["AWD", "Panoramic Roof", "Premium Package"],
-  },
-];
+interface Car {
+  id: string;
+  name: string;
+  image_url?: string;
+  price_per_day: number;
+  description: string;
+  features?: string[];
+  available: boolean;
+  brand?: string;
+  seats?: number;
+  transmission?: string;
+}
 
 const Index = () => {
   const [searchFilters, setSearchFilters] = useState<SearchFilters | null>(null);
+  const [featuredCars, setFeaturedCars] = useState<Car[]>([]);
+  const [selectedCar, setSelectedCar] = useState<Car | null>(null);
+  const [isBookingFormOpen, setIsBookingFormOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
+
+  // Fetch featured cars from Supabase
+  useEffect(() => {
+    const fetchFeaturedCars = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('cars')
+          .select('*')
+          .eq('available', true)
+          .limit(3);
+
+        if (error) {
+          console.error('Error fetching cars:', error);
+          toast({
+            title: "Error loading cars",
+            description: "Could not load featured cars. Please try again.",
+            variant: "destructive",
+          });
+        } else {
+          setFeaturedCars(data || []);
+        }
+      } catch (error) {
+        console.error('Unexpected error:', error);
+        toast({
+          title: "Error",
+          description: "An unexpected error occurred while loading cars.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFeaturedCars();
+  }, [toast]);
 
   const handleSearch = (filters: SearchFilters) => {
     setSearchFilters(filters);
     // In a real app, this would navigate to /cars with search params
     console.log("Search filters:", filters);
+  };
+
+  const handleBookNow = (car: Car) => {
+    setSelectedCar(car);
+    setIsBookingFormOpen(true);
   };
 
   return (
@@ -166,9 +182,19 @@ const Index = () => {
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            {featuredCars.map((car) => (
-              <CarCard key={car.id} car={car} />
-            ))}
+            {loading ? (
+              <div className="col-span-full text-center py-8">
+                <p className="text-lg">Loading featured cars...</p>
+              </div>
+            ) : featuredCars.length > 0 ? (
+              featuredCars.map((car) => (
+                <CarCard key={car.id} car={car} onBookNow={() => handleBookNow(car)} />
+              ))
+            ) : (
+              <div className="col-span-full text-center py-8">
+                <p className="text-muted-foreground">No featured cars available at the moment.</p>
+              </div>
+            )}
           </div>
           
           <div className="text-center">
@@ -199,6 +225,21 @@ const Index = () => {
           </Button>
         </div>
       </section>
+
+      {/* Booking Form Modal */}
+      <Dialog open={isBookingFormOpen} onOpenChange={setIsBookingFormOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Book Your Car</DialogTitle>
+          </DialogHeader>
+          {selectedCar && (
+            <BookingForm 
+              car={selectedCar} 
+              onClose={() => setIsBookingFormOpen(false)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
