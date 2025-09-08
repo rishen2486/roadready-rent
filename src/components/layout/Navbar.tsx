@@ -1,12 +1,85 @@
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Car, Menu, X, User, Settings } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Car, Menu, X, User, Settings, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+
+interface Profile {
+  user_id: string;
+  email: string;
+  name: string;
+  full_name: string | null;
+  is_admin: boolean;
+}
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [loading, setLoading] = useState(true);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const getProfile = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) {
+          setLoading(false);
+          return;
+        }
+
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("user_id, email, name, full_name, is_admin")
+          .eq("user_id", session.user.id)
+          .single();
+
+        if (!error && data) {
+          setProfile(data);
+        }
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getProfile();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (event === 'SIGNED_OUT') {
+          setProfile(null);
+        } else if (event === 'SIGNED_IN' && session?.user) {
+          getProfile();
+        }
+      }
+    );
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      setProfile(null);
+      navigate('/');
+      toast({
+        title: "Logged out successfully",
+        description: "You have been logged out of your account.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to log out. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -56,23 +129,39 @@ const Navbar = () => {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="ghost" size="sm" asChild>
-              <Link to="/login">
-                <User className="h-4 w-4 mr-2" />
-                Login
-              </Link>
-            </Button>
-            <Button variant="outline" size="sm" asChild>
-              <Link to="/signup">
-                Sign Up
-              </Link>
-            </Button>
-            <Button size="sm" variant="premium" asChild>
-              <Link to="/admin">
-                <Settings className="h-4 w-4 mr-2" />
-                Admin
-              </Link>
-            </Button>
+            {profile ? (
+              <>
+                <span className="text-sm text-muted-foreground">
+                  Welcome, {profile.full_name || profile.name || profile.email}
+                </span>
+                {profile.is_admin && (
+                  <Button size="sm" variant="premium" asChild>
+                    <Link to="/admin">
+                      <Settings className="h-4 w-4 mr-2" />
+                      Admin
+                    </Link>
+                  </Button>
+                )}
+                <Button variant="ghost" size="sm" onClick={handleLogout}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button variant="ghost" size="sm" asChild>
+                  <Link to="/login">
+                    <User className="h-4 w-4 mr-2" />
+                    Login
+                  </Link>
+                </Button>
+                <Button variant="outline" size="sm" asChild>
+                  <Link to="/signup">
+                    Sign Up
+                  </Link>
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -108,23 +197,42 @@ const Navbar = () => {
                 </Link>
               ))}
               <div className="border-t border-border/50 pt-4 px-4 space-y-3">
-                <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
-                  <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
-                    <User className="h-4 w-4 mr-2" />
-                    Login
-                  </Link>
-                </Button>
-                <Button variant="outline" size="sm" className="w-full" asChild>
-                  <Link to="/signup" onClick={() => setIsMobileMenuOpen(false)}>
-                    Sign Up
-                  </Link>
-                </Button>
-                <Button size="sm" variant="premium" className="w-full" asChild>
-                  <Link to="/admin" onClick={() => setIsMobileMenuOpen(false)}>
-                    <Settings className="h-4 w-4 mr-2" />
-                    Admin
-                  </Link>
-                </Button>
+                {profile ? (
+                  <>
+                    <div className="px-3 py-2 text-sm text-muted-foreground">
+                      Welcome, {profile.full_name || profile.name || profile.email}
+                    </div>
+                    {profile.is_admin && (
+                      <Button size="sm" variant="premium" className="w-full" asChild>
+                        <Link to="/admin" onClick={() => setIsMobileMenuOpen(false)}>
+                          <Settings className="h-4 w-4 mr-2" />
+                          Admin
+                        </Link>
+                      </Button>
+                    )}
+                    <Button variant="ghost" size="sm" className="w-full justify-start" onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      handleLogout();
+                    }}>
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Logout
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
+                      <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
+                        <User className="h-4 w-4 mr-2" />
+                        Login
+                      </Link>
+                    </Button>
+                    <Button variant="outline" size="sm" className="w-full" asChild>
+                      <Link to="/signup" onClick={() => setIsMobileMenuOpen(false)}>
+                        Sign Up
+                      </Link>
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           </div>
