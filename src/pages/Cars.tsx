@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Filter, Grid, List, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -36,45 +37,83 @@ const Cars = () => {
   const [priceRange, setPriceRange] = useState([50, 150]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const { toast } = useToast();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const categories = ["Economy", "Compact", "Midsize", "Luxury", "SUV", "Electric"];
 
-  // Fetch cars from Supabase
-  useEffect(() => {
-    const fetchCars = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('cars')
-          .select('*')
-          .eq('available', true);
+  // Get initial filters from URL params
+  const getFiltersFromURL = (): Partial<SearchFilters> => {
+    const searchParams = new URLSearchParams(location.search);
+    return {
+      country: searchParams.get('country') || '',
+      location: searchParams.get('location') || '',
+      pickupDate: searchParams.get('pickupDate') || '',
+      pickupTime: searchParams.get('pickupTime') || '',
+      returnDate: searchParams.get('returnDate') || '',
+      returnTime: searchParams.get('returnTime') || '',
+      carType: searchParams.get('carType') || '',
+    };
+  };
 
-        if (error) {
-          console.error('Error fetching cars:', error);
-          toast({
-            title: "Error loading cars",
-            description: "Could not load available cars. Please try again.",
-            variant: "destructive",
-          });
-        } else {
-          setCars(data || []);
-        }
-      } catch (error) {
-        console.error('Unexpected error:', error);
+  // Fetch cars from Supabase with filters
+  const fetchCars = async (filters?: Partial<SearchFilters>) => {
+    try {
+      let query = supabase
+        .from('cars')
+        .select('*')
+        .eq('available', true);
+
+      // Apply filters if provided
+      if (filters?.country) {
+        // Note: We'll need to add country column to cars table
+        // For now, we'll filter in the frontend
+      }
+
+      const { data, error } = await query;
+
+      if (error) {
+        console.error('Error fetching cars:', error);
         toast({
-          title: "Error",
-          description: "An unexpected error occurred while loading cars.",
+          title: "Error loading cars",
+          description: "Could not load available cars. Please try again.",
           variant: "destructive",
         });
-      } finally {
-        setLoading(false);
+      } else {
+        setCars(data || []);
       }
-    };
+    } catch (error) {
+      console.error('Unexpected error:', error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred while loading cars.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchCars();
-  }, [toast]);
+  // Initial load with URL filters
+  useEffect(() => {
+    const urlFilters = getFiltersFromURL();
+    if (Object.values(urlFilters).some(v => v)) {
+      setSearchFilters(urlFilters as SearchFilters);
+    }
+    fetchCars(urlFilters);
+  }, [location.search, toast]);
 
   const handleSearch = (filters: SearchFilters) => {
     setSearchFilters(filters);
+    fetchCars(filters);
+  };
+
+  const handleClearFilters = () => {
+    setSearchFilters(null);
+    setSelectedCategories([]);
+    setPriceRange([50, 150]);
+    navigate('/cars', { replace: true });
+    fetchCars();
   };
 
   const handleCategoryChange = (category: string, checked: boolean) => {
@@ -148,7 +187,7 @@ const Cars = () => {
             </p>
           </div>
           
-          <SearchBar onSearch={handleSearch} />
+          <SearchBar onSearch={handleSearch} initialFilters={getFiltersFromURL()} />
         </div>
       </section>
 
@@ -238,12 +277,9 @@ const Cars = () => {
                       variant="outline" 
                       size="sm" 
                       className="w-full"
-                      onClick={() => {
-                        setSelectedCategories([]);
-                        setPriceRange([50, 150]);
-                      }}
+                      onClick={handleClearFilters}
                     >
-                      Clear Filters
+                      Clear All Filters
                     </Button>
                   </div>
                 </Card>
@@ -275,11 +311,7 @@ const Cars = () => {
                     </p>
                     <Button 
                       variant="outline"
-                      onClick={() => {
-                        setSelectedCategories([]);
-                        setPriceRange([50, 150]);
-                        setSearchFilters(null);
-                      }}
+                      onClick={handleClearFilters}
                     >
                       Clear All Filters
                     </Button>

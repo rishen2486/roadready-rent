@@ -68,9 +68,12 @@ const Index = () => {
   }, [toast]);
 
   const handleSearch = (filters: SearchFilters) => {
-    setSearchFilters(filters);
-    // In a real app, this would navigate to /cars with search params
-    console.log("Search filters:", filters);
+    // Navigate to Cars page with filters as query params
+    const params = new URLSearchParams();
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) params.set(key, value);
+    });
+    window.location.href = `/cars?${params.toString()}`;
   };
 
   const handleBookNow = (car: Car) => {

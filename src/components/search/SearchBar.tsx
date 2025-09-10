@@ -9,21 +9,28 @@ import { Card } from "@/components/ui/card";
 interface SearchBarProps {
   onSearch?: (filters: SearchFilters) => void;
   className?: string;
+  initialFilters?: Partial<SearchFilters>;
 }
 
 export interface SearchFilters {
+  country: string;
   location: string;
   pickupDate: string;
+  pickupTime: string;
   returnDate: string;
+  returnTime: string;
   carType: string;
 }
 
-const SearchBar = ({ onSearch, className }: SearchBarProps) => {
+const SearchBar = ({ onSearch, className, initialFilters }: SearchBarProps) => {
   const [filters, setFilters] = useState<SearchFilters>({
-    location: "",
-    pickupDate: "",
-    returnDate: "",
-    carType: "",
+    country: initialFilters?.country || "Mauritius",
+    location: initialFilters?.location || "",
+    pickupDate: initialFilters?.pickupDate || "",
+    pickupTime: initialFilters?.pickupTime || "",
+    returnDate: initialFilters?.returnDate || "",
+    returnTime: initialFilters?.returnTime || "",
+    carType: initialFilters?.carType || "",
   });
 
   const handleSearch = () => {
@@ -36,11 +43,27 @@ const SearchBar = ({ onSearch, className }: SearchBarProps) => {
 
   return (
     <Card className={`search-glass p-6 ${className}`}>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
-        {/* Location */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-4 items-end">
+        {/* Country */}
         <div className="space-y-2">
           <Label className="text-sm font-medium flex items-center gap-2">
             <MapPin className="h-4 w-4 text-primary" />
+            Country
+          </Label>
+          <Select value={filters.country} onValueChange={(value) => updateFilter("country", value)}>
+            <SelectTrigger className="bg-background/60">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Mauritius">Mauritius</SelectItem>
+              <SelectItem value="Rodrigues">Rodrigues</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Location */}
+        <div className="space-y-2">
+          <Label className="text-sm font-medium">
             Pickup Location
           </Label>
           <Input
@@ -51,7 +74,7 @@ const SearchBar = ({ onSearch, className }: SearchBarProps) => {
           />
         </div>
 
-        {/* Pickup Date */}
+        {/* Pickup Date & Time */}
         <div className="space-y-2">
           <Label className="text-sm font-medium flex items-center gap-2">
             <Calendar className="h-4 w-4 text-primary" />
@@ -66,7 +89,19 @@ const SearchBar = ({ onSearch, className }: SearchBarProps) => {
           />
         </div>
 
-        {/* Return Date */}
+        <div className="space-y-2">
+          <Label className="text-sm font-medium">
+            Pickup Time
+          </Label>
+          <Input
+            type="time"
+            value={filters.pickupTime}
+            onChange={(e) => updateFilter("pickupTime", e.target.value)}
+            className="bg-background/60"
+          />
+        </div>
+
+        {/* Return Date & Time */}
         <div className="space-y-2">
           <Label className="text-sm font-medium flex items-center gap-2">
             <Calendar className="h-4 w-4 text-primary" />
@@ -81,26 +116,16 @@ const SearchBar = ({ onSearch, className }: SearchBarProps) => {
           />
         </div>
 
-        {/* Car Type */}
         <div className="space-y-2">
-          <Label className="text-sm font-medium flex items-center gap-2">
-            <Car className="h-4 w-4 text-primary" />
-            Car Type
+          <Label className="text-sm font-medium">
+            Return Time
           </Label>
-          <Select onValueChange={(value) => updateFilter("carType", value)}>
-            <SelectTrigger className="bg-background/60">
-              <SelectValue placeholder="Any type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="economy">Economy</SelectItem>
-              <SelectItem value="compact">Compact</SelectItem>
-              <SelectItem value="midsize">Midsize</SelectItem>
-              <SelectItem value="fullsize">Full Size</SelectItem>
-              <SelectItem value="luxury">Luxury</SelectItem>
-              <SelectItem value="suv">SUV</SelectItem>
-              <SelectItem value="convertible">Convertible</SelectItem>
-            </SelectContent>
-          </Select>
+          <Input
+            type="time"
+            value={filters.returnTime}
+            onChange={(e) => updateFilter("returnTime", e.target.value)}
+            className="bg-background/60"
+          />
         </div>
 
         {/* Search Button */}
