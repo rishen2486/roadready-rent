@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      attractions: {
+        Row: {
+          created_at: string
+          details: string | null
+          hours: number | null
+          id: string
+          image_url: string | null
+          name: string
+          region: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          details?: string | null
+          hours?: number | null
+          id?: string
+          image_url?: string | null
+          name: string
+          region?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          details?: string | null
+          hours?: number | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          region?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       bookings: {
         Row: {
           car_id: string | null
@@ -136,6 +172,7 @@ export type Database = {
           small_bags: number | null
           transmission: string | null
           updated_at: string | null
+          user_id: string | null
         }
         Insert: {
           available?: boolean | null
@@ -154,6 +191,7 @@ export type Database = {
           small_bags?: number | null
           transmission?: string | null
           updated_at?: string | null
+          user_id?: string | null
         }
         Update: {
           available?: boolean | null
@@ -172,6 +210,7 @@ export type Database = {
           small_bags?: number | null
           transmission?: string | null
           updated_at?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -183,6 +222,7 @@ export type Database = {
           id: string
           is_admin: boolean | null
           name: string
+          superuser: boolean | null
           telephone_number: string
           updated_at: string
           user_id: string
@@ -194,6 +234,7 @@ export type Database = {
           id?: string
           is_admin?: boolean | null
           name: string
+          superuser?: boolean | null
           telephone_number: string
           updated_at?: string
           user_id: string
@@ -205,9 +246,46 @@ export type Database = {
           id?: string
           is_admin?: boolean | null
           name?: string
+          superuser?: boolean | null
           telephone_number?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      tours: {
+        Row: {
+          created_at: string
+          details: string | null
+          hours: number | null
+          id: string
+          image_url: string | null
+          name: string
+          region: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          details?: string | null
+          hours?: number | null
+          id?: string
+          image_url?: string | null
+          name: string
+          region?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          details?: string | null
+          hours?: number | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          region?: string | null
+          updated_at?: string
+          user_id?: string | null
         }
         Relationships: []
       }
