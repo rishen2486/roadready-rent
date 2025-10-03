@@ -26,12 +26,19 @@ export default function AddCarModal({ onClose }: AddCarModalProps) {
     image_url: "",
     features: "",
   });
+  const [photos, setPhotos] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setPhotos(Array.from(e.target.files).slice(0, 5));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -43,6 +50,26 @@ export default function AddCarModal({ onClose }: AddCarModalProps) {
       if (!user) {
         toast.error("You must be logged in to add cars");
         return;
+      }
+
+      // Upload photos
+      const uploadedUrls: string[] = [];
+      for (const file of photos) {
+        const filePath = `cars/${Date.now()}-${file.name}`;
+        const { data, error } = await supabase.storage
+          .from("car-images")
+          .upload(filePath, file);
+
+        if (error) {
+          console.error("Upload error:", error);
+          continue;
+        }
+
+        const publicUrl = supabase.storage
+          .from("car-images")
+          .getPublicUrl(data.path).data.publicUrl;
+
+        uploadedUrls.push(publicUrl);
       }
 
       const { error } = await supabase.from("cars").insert([
@@ -57,6 +84,7 @@ export default function AddCarModal({ onClose }: AddCarModalProps) {
           small_bags: form.small_bags ? parseInt(form.small_bags) : 0,
           description: form.description,
           image_url: form.image_url,
+          photos: uploadedUrls,
           features: form.features ? form.features.split(",").map(f => f.trim()) : null,
           user_id: user.id,
         },
@@ -195,15 +223,21 @@ export default function AddCarModal({ onClose }: AddCarModalProps) {
           </div>
           
           <div>
-            <Label htmlFor="image_url">Photo URL</Label>
+            <Label htmlFor="photos">Photos (up to 5 images)</Label>
             <Input
-              id="image_url"
-              name="image_url"
-              type="url"
-              placeholder="https://example.com/car-photo.jpg"
-              value={form.image_url}
-              onChange={handleChange}
+              id="photos"
+              name="photos"
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={handleFileChange}
+              className="cursor-pointer"
             />
+            {photos.length > 0 && (
+              <p className="text-sm text-muted-foreground mt-1">
+                {photos.length} file(s) selected
+              </p>
+            )}
           </div>
           
           <div>

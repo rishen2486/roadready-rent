@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import SearchBar, { SearchFilters } from "@/components/search/SearchBar";
-import CarCard from "@/components/cars/CarCard";
+import CarCardWithSlider from "@/components/cars/CarCardWithSlider";
 import { BookingForm } from "@/components/BookingForm";
 import Navbar from "@/components/layout/Navbar";
 import { supabase } from "@/integrations/supabase/client";
@@ -294,10 +294,9 @@ const Cars = () => {
                   : "grid-cols-1"
               }`}>
                 {sortedCars.map((car) => (
-                  <CarCard 
+                  <CarCardWithSlider 
                     key={car.id} 
-                    car={car} 
-                    onBookNow={() => handleBookNow(car)}
+                    car={car}
                   />
                 ))}
               </div>

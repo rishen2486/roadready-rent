@@ -20,12 +20,19 @@ export default function AddAttractionModal({ onClose }: AddAttractionModalProps)
     details: "",
     image_url: "",
   });
+  const [photos, setPhotos] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setPhotos(Array.from(e.target.files).slice(0, 5));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -39,6 +46,26 @@ export default function AddAttractionModal({ onClose }: AddAttractionModalProps)
         return;
       }
 
+      // Upload photos
+      const uploadedUrls: string[] = [];
+      for (const file of photos) {
+        const filePath = `attractions/${Date.now()}-${file.name}`;
+        const { data, error } = await supabase.storage
+          .from("attraction-images")
+          .upload(filePath, file);
+
+        if (error) {
+          console.error("Upload error:", error);
+          continue;
+        }
+
+        const publicUrl = supabase.storage
+          .from("attraction-images")
+          .getPublicUrl(data.path).data.publicUrl;
+
+        uploadedUrls.push(publicUrl);
+      }
+
       const { error } = await supabase.from("attractions").insert([
         {
           name: form.name,
@@ -46,6 +73,7 @@ export default function AddAttractionModal({ onClose }: AddAttractionModalProps)
           hours: form.hours ? parseInt(form.hours) : null,
           details: form.details,
           image_url: form.image_url,
+          photos: uploadedUrls,
           user_id: user.id,
         },
       ]);
@@ -107,15 +135,21 @@ export default function AddAttractionModal({ onClose }: AddAttractionModalProps)
           </div>
           
           <div>
-            <Label htmlFor="image_url">Photo URL</Label>
+            <Label htmlFor="photos">Photos (up to 5 images)</Label>
             <Input
-              id="image_url"
-              name="image_url"
-              type="url"
-              placeholder="https://example.com/attraction-photo.jpg"
-              value={form.image_url}
-              onChange={handleChange}
+              id="photos"
+              name="photos"
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={handleFileChange}
+              className="cursor-pointer"
             />
+            {photos.length > 0 && (
+              <p className="text-sm text-muted-foreground mt-1">
+                {photos.length} file(s) selected
+              </p>
+            )}
           </div>
           
           <div>

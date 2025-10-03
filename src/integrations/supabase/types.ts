@@ -22,6 +22,7 @@ export type Database = {
           id: string
           image_url: string | null
           name: string
+          photos: string[] | null
           region: string | null
           updated_at: string
           user_id: string | null
@@ -33,6 +34,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           name: string
+          photos?: string[] | null
           region?: string | null
           updated_at?: string
           user_id?: string | null
@@ -44,6 +46,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           name?: string
+          photos?: string[] | null
           region?: string | null
           updated_at?: string
           user_id?: string | null
@@ -261,6 +264,7 @@ export type Database = {
           id: string
           image_url: string | null
           name: string
+          photos: string[] | null
           region: string | null
           updated_at: string
           user_id: string | null
@@ -272,6 +276,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           name: string
+          photos?: string[] | null
           region?: string | null
           updated_at?: string
           user_id?: string | null
@@ -283,6 +288,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           name?: string
+          photos?: string[] | null
           region?: string | null
           updated_at?: string
           user_id?: string | null
