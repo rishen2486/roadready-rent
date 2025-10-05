@@ -7,6 +7,7 @@ import AddTourModal from "@/components/admin/AddTourModal";
 import AddAttractionModal from "@/components/admin/AddAttractionModal";
 import AdminAnalytics from "@/components/admin/AdminAnalytics";
 import AdminReports from "@/components/admin/AdminReports";
+import CarList from "@/components/admin/CarList";
 import Navbar from "@/components/layout/Navbar";
 
 export default function Dashboard() {
@@ -41,6 +42,9 @@ export default function Dashboard() {
             Add Attraction
           </Button>
         </div>
+
+        {/* Car List Section */}
+        <CarList />
 
         {/* Analytics Section */}
         <AdminAnalytics />

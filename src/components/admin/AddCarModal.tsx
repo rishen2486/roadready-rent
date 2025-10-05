@@ -25,6 +25,7 @@ export default function AddCarModal({ onClose }: AddCarModalProps) {
     description: "",
     image_url: "",
     features: "",
+    country: "Mauritius",
   });
   const [photos, setPhotos] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
@@ -86,6 +87,7 @@ export default function AddCarModal({ onClose }: AddCarModalProps) {
           image_url: uploadedUrls.length > 0 ? uploadedUrls[0] : null,
           photos: uploadedUrls.length > 0 ? uploadedUrls : null,
           features: form.features ? form.features.split(",").map(f => f.trim()) : null,
+          country: form.country,
           user_id: user.id,
         },
       ]);
@@ -209,6 +211,19 @@ export default function AddCarModal({ onClose }: AddCarModalProps) {
               value={form.mileage}
               onChange={handleChange}
             />
+          </div>
+          
+          <div>
+            <Label htmlFor="country">Country</Label>
+            <select
+              name="country"
+              value={form.country}
+              onChange={handleChange}
+              className="w-full border rounded-lg p-2 bg-background text-foreground"
+            >
+              <option value="Mauritius">Mauritius</option>
+              <option value="Rodrigues">Rodrigues</option>
+            </select>
           </div>
           
           <div>

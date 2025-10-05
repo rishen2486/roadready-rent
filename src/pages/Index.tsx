@@ -22,6 +22,7 @@ interface Car {
   brand?: string;
   seats?: number;
   transmission?: string;
+  country?: string;
 }
 
 const Index = () => {
@@ -30,17 +31,32 @@ const Index = () => {
   const [selectedCar, setSelectedCar] = useState<Car | null>(null);
   const [isBookingFormOpen, setIsBookingFormOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [countryFilter, setCountryFilter] = useState<string>("All");
   const { toast } = useToast();
 
   // Fetch featured cars from Supabase
   useEffect(() => {
     const fetchFeaturedCars = async () => {
+      setLoading(true);
       try {
-        const { data, error } = await supabase
-          .from('cars')
-          .select('*')
-          .eq('available', true)
-          .limit(3);
+        let result;
+        
+        if (countryFilter === "All") {
+          result = await supabase
+            .from('cars')
+            .select('*')
+            .eq('available', true)
+            .limit(3);
+        } else {
+          result = await (supabase
+            .from('cars')
+            .select('*')
+            .eq('available', true) as any)
+            .eq('country', countryFilter)
+            .limit(3);
+        }
+        
+        const { data, error } = result;
 
         if (error) {
           console.error('Error fetching cars:', error);
@@ -65,7 +81,7 @@ const Index = () => {
     };
 
     fetchFeaturedCars();
-  }, [toast]);
+  }, [countryFilter]);
 
   const handleSearch = (filters: SearchFilters) => {
     // Navigate to Cars page with filters as query params
@@ -175,13 +191,25 @@ const Index = () => {
       {/* Featured Cars Section */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
+          <div className="text-center mb-8">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               Featured Vehicles
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Explore our handpicked selection of premium vehicles
             </p>
+          </div>
+          
+          <div className="flex justify-center mb-8">
+            <select
+              value={countryFilter}
+              onChange={(e) => setCountryFilter(e.target.value)}
+              className="border rounded-lg p-2 bg-background text-foreground"
+            >
+              <option value="All">All Countries</option>
+              <option value="Mauritius">Mauritius</option>
+              <option value="Rodrigues">Rodrigues</option>
+            </select>
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
