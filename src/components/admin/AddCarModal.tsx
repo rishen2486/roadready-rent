@@ -77,14 +77,14 @@ export default function AddCarModal({ onClose }: AddCarModalProps) {
           name: form.name,
           brand: form.brand,
           seats: form.seats ? parseInt(form.seats) : null,
-          transmission: form.transmission,
+          transmission: form.transmission || null,
           price_per_day: form.price_per_day ? parseFloat(form.price_per_day) : null,
-          mileage: form.mileage,
+          mileage: form.mileage || null,
           large_bags: form.large_bags ? parseInt(form.large_bags) : 0,
           small_bags: form.small_bags ? parseInt(form.small_bags) : 0,
-          description: form.description,
-          image_url: form.image_url,
-          photos: uploadedUrls,
+          description: form.description || null,
+          image_url: uploadedUrls.length > 0 ? uploadedUrls[0] : null,
+          photos: uploadedUrls.length > 0 ? uploadedUrls : null,
           features: form.features ? form.features.split(",").map(f => f.trim()) : null,
           user_id: user.id,
         },
@@ -162,7 +162,7 @@ export default function AddCarModal({ onClose }: AddCarModalProps) {
           </div>
           
           <div>
-            <Label htmlFor="price_per_day">Price per Day ($)</Label>
+            <Label htmlFor="price_per_day">Price per Day (Rs)</Label>
             <Input
               id="price_per_day"
               name="price_per_day"

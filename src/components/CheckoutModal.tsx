@@ -169,7 +169,7 @@ export function CheckoutModal({
               </div>
               <div className="flex justify-between font-bold text-lg pt-2 border-t">
                 <span>Total:</span>
-                <span>${bookingDetails.totalAmount}</span>
+                <span>Rs {bookingDetails.totalAmount}</span>
               </div>
             </CardContent>
           </Card>
@@ -244,7 +244,7 @@ export function CheckoutModal({
                 disabled={processing || !cardDetails.name || !cardDetails.number || !cardDetails.expiry || !cardDetails.cvv}
                 className="w-full"
               >
-                {processing ? 'Processing...' : `Pay $${bookingDetails.totalAmount}`}
+                {processing ? 'Processing...' : `Pay Rs ${bookingDetails.totalAmount}`}
               </Button>
             </div>
           )}

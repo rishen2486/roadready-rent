@@ -119,7 +119,7 @@ const CarCard = ({ car, onBookNow }: CarCardProps) => {
       <CardFooter className="p-4 pt-0 flex items-center justify-between">
         <div className="text-left">
           <div className="text-2xl font-bold text-foreground">
-            ${pricePerDay}
+            Rs {pricePerDay}
             <span className="text-sm font-normal text-muted-foreground">/day</span>
           </div>
         </div>

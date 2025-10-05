@@ -64,7 +64,7 @@ export default function CarCardWithSlider({ car }: CarCardProps) {
       </div>
 
       {car.price_per_day && (
-        <p className="text-lg font-bold text-primary mt-3">${car.price_per_day}/day</p>
+        <p className="text-lg font-bold text-primary mt-3">Rs {car.price_per_day}/day</p>
       )}
 
       {/* Details Button */}
@@ -150,7 +150,7 @@ export default function CarCardWithSlider({ car }: CarCardProps) {
             {car.price_per_day && (
               <div className="flex justify-between">
                 <span className="font-medium">Price per Day:</span>
-                <span className="text-lg font-bold text-primary">${car.price_per_day}</span>
+                <span className="text-lg font-bold text-primary">Rs {car.price_per_day}</span>
               </div>
             )}
             {car.features && car.features.length > 0 && (

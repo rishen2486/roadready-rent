@@ -143,7 +143,7 @@ const BookingPage: React.FC = () => {
                 <p><strong>Drop-off:</strong> {booking.dropoff_location}</p>
                 <p><strong>Dates:</strong> {booking.start_date} → {booking.end_date}</p>
                 <p className="text-lg font-bold">
-                  Total: ${booking.total_amount}
+                  Total: Rs {booking.total_amount}
                 </p>
                 <div className="flex items-center gap-2">
                   <strong>Status:</strong>

@@ -74,7 +74,7 @@ export default function AdminAnalytics() {
         </div>
         <div className="bg-card p-4 rounded-lg border">
           <h3 className="text-sm font-medium text-muted-foreground">Total Revenue</h3>
-          <p className="text-2xl font-bold text-foreground">${totalRevenue.toFixed(2)}</p>
+          <p className="text-2xl font-bold text-foreground">Rs {totalRevenue.toFixed(2)}</p>
         </div>
       </div>
 

@@ -245,7 +245,7 @@ export function BookingForm({ car, onClose }: BookingFormProps) {
             <div className="bg-muted p-4 rounded-lg space-y-2">
               <div className="flex justify-between text-sm">
                 <span>Daily Rate:</span>
-                <span>${car.price_per_day}/day</span>
+                <span>Rs {car.price_per_day}/day</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span>Duration:</span>
@@ -253,7 +253,7 @@ export function BookingForm({ car, onClose }: BookingFormProps) {
               </div>
               <div className="flex justify-between font-bold text-lg pt-2 border-t">
                 <span>Total:</span>
-                <span>${totalAmount}</span>
+                <span>Rs {totalAmount}</span>
               </div>
             </div>
           )}

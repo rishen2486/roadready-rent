@@ -167,7 +167,7 @@ export default function AdminReports() {
             <p className="text-sm text-muted-foreground">Total Attractions</p>
           </div>
           <div className="text-center">
-            <p className="text-2xl font-bold text-foreground">${totalRevenue.toFixed(2)}</p>
+            <p className="text-2xl font-bold text-foreground">Rs {totalRevenue.toFixed(2)}</p>
             <p className="text-sm text-muted-foreground">Total Revenue</p>
           </div>
         </div>
