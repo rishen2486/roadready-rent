@@ -10,7 +10,7 @@ interface BookingModalProps {
   show: boolean;
   onClose: () => void;
   item: any;
-  type: "tour" | "attraction";
+  type: "tour" | "attraction" | "car";
 }
 
 export default function BookingModal({ show, onClose, item, type }: BookingModalProps) {

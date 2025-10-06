@@ -157,8 +157,8 @@ export default function AddCarModal({ onClose }: AddCarModalProps) {
                 className="w-full border rounded-lg p-2 bg-background text-foreground"
               >
                 <option value="">Select</option>
-                <option value="Manual">Manual</option>
-                <option value="Automatic">Automatic</option>
+                <option value="manual">Manual</option>
+                <option value="automatic">Automatic</option>
               </select>
             </div>
           </div>
