@@ -5,6 +5,7 @@ import Slider from "react-slick";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import BookingModal from "@/components/BookingModal";
 
 interface AttractionCardProps {
   attraction: {
@@ -20,6 +21,7 @@ interface AttractionCardProps {
 
 export default function AttractionCard({ attraction }: AttractionCardProps) {
   const [open, setOpen] = useState(false);
+  const [showBooking, setShowBooking] = useState(false);
 
   const sliderSettings = {
     dots: true,
@@ -118,8 +120,25 @@ export default function AttractionCard({ attraction }: AttractionCardProps) {
               </div>
             )}
           </div>
+
+          <Button 
+            onClick={() => {
+              setOpen(false);
+              setShowBooking(true);
+            }}
+            className="w-full mt-4"
+          >
+            Book This Attraction
+          </Button>
         </DialogContent>
       </Dialog>
+
+      <BookingModal
+        show={showBooking}
+        onClose={() => setShowBooking(false)}
+        item={attraction}
+        type="attraction"
+      />
     </div>
   );
 }

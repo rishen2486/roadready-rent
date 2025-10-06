@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       attractions: {
         Row: {
+          country: string | null
           created_at: string
           details: string | null
           hours: number | null
@@ -28,6 +29,7 @@ export type Database = {
           user_id: string | null
         }
         Insert: {
+          country?: string | null
           created_at?: string
           details?: string | null
           hours?: number | null
@@ -40,6 +42,7 @@ export type Database = {
           user_id?: string | null
         }
         Update: {
+          country?: string | null
           created_at?: string
           details?: string | null
           hours?: number | null
@@ -55,6 +58,7 @@ export type Database = {
       }
       bookings: {
         Row: {
+          booking_date: string | null
           car_id: string | null
           created_at: string | null
           customer_email: string
@@ -63,6 +67,8 @@ export type Database = {
           dropoff_location: string
           end_date: string
           id: string
+          item_id: string | null
+          item_type: string | null
           payment_status: string | null
           pickup_location: string
           start_date: string
@@ -71,6 +77,7 @@ export type Database = {
           user_id: string | null
         }
         Insert: {
+          booking_date?: string | null
           car_id?: string | null
           created_at?: string | null
           customer_email: string
@@ -79,6 +86,8 @@ export type Database = {
           dropoff_location: string
           end_date: string
           id?: string
+          item_id?: string | null
+          item_type?: string | null
           payment_status?: string | null
           pickup_location: string
           start_date: string
@@ -87,6 +96,7 @@ export type Database = {
           user_id?: string | null
         }
         Update: {
+          booking_date?: string | null
           car_id?: string | null
           created_at?: string | null
           customer_email?: string
@@ -95,6 +105,8 @@ export type Database = {
           dropoff_location?: string
           end_date?: string
           id?: string
+          item_id?: string | null
+          item_type?: string | null
           payment_status?: string | null
           pickup_location?: string
           start_date?: string
@@ -161,6 +173,7 @@ export type Database = {
         Row: {
           available: boolean | null
           brand: string | null
+          country: string | null
           created_at: string | null
           description: string | null
           features: string[] | null
@@ -180,6 +193,7 @@ export type Database = {
         Insert: {
           available?: boolean | null
           brand?: string | null
+          country?: string | null
           created_at?: string | null
           description?: string | null
           features?: string[] | null
@@ -199,6 +213,7 @@ export type Database = {
         Update: {
           available?: boolean | null
           brand?: string | null
+          country?: string | null
           created_at?: string | null
           description?: string | null
           features?: string[] | null
@@ -258,6 +273,7 @@ export type Database = {
       }
       tours: {
         Row: {
+          country: string | null
           created_at: string
           details: string | null
           hours: number | null
@@ -270,6 +286,7 @@ export type Database = {
           user_id: string | null
         }
         Insert: {
+          country?: string | null
           created_at?: string
           details?: string | null
           hours?: number | null
@@ -282,6 +299,7 @@ export type Database = {
           user_id?: string | null
         }
         Update: {
+          country?: string | null
           created_at?: string
           details?: string | null
           hours?: number | null
