@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import SearchBar, { SearchFilters } from "@/components/search/SearchBar";
-import CarCardWithSlider from "@/components/cars/CarCardWithSlider";
+import CarCard from "@/components/cars/CarCard";
 import { BookingForm } from "@/components/BookingForm";
 import Navbar from "@/components/layout/Navbar";
 import { supabase } from "@/integrations/supabase/client";
@@ -64,10 +64,9 @@ const Cars = () => {
         .select('*')
         .eq('available', true);
 
-      // Apply filters if provided
+      // Apply country filter if provided
       if (filters?.country) {
-        // Note: We'll need to add country column to cars table
-        // For now, we'll filter in the frontend
+        query = query.eq('country', filters.country);
       }
 
       const { data, error } = await query;
@@ -94,13 +93,18 @@ const Cars = () => {
     }
   };
 
-  // Initial load with URL filters
+  // Initial load - show all cars by default, filter only when search is used
   useEffect(() => {
     const urlFilters = getFiltersFromURL();
-    if (Object.values(urlFilters).some(v => v)) {
+    const hasFilters = Object.values(urlFilters).some(v => v);
+    
+    if (hasFilters) {
       setSearchFilters(urlFilters as SearchFilters);
+      fetchCars(urlFilters);
+    } else {
+      // No filters - show all cars
+      fetchCars();
     }
-    fetchCars(urlFilters);
   }, [location.search, toast]);
 
   const handleSearch = (filters: SearchFilters) => {
@@ -294,9 +298,10 @@ const Cars = () => {
                   : "grid-cols-1"
               }`}>
                 {sortedCars.map((car) => (
-                  <CarCardWithSlider 
+                  <CarCard 
                     key={car.id} 
                     car={car}
+                    onBookNow={() => handleBookNow(car)}
                   />
                 ))}
               </div>

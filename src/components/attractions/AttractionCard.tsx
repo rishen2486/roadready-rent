@@ -5,7 +5,7 @@ import Slider from "react-slick";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import BookingModal from "@/components/BookingModal";
+import { AttractionBookingForm } from "@/components/AttractionBookingForm";
 
 interface AttractionCardProps {
   attraction: {
@@ -21,7 +21,7 @@ interface AttractionCardProps {
 
 export default function AttractionCard({ attraction }: AttractionCardProps) {
   const [open, setOpen] = useState(false);
-  const [showBooking, setShowBooking] = useState(false);
+  const [showBookingForm, setShowBookingForm] = useState(false);
 
   const sliderSettings = {
     dots: true,
@@ -124,7 +124,7 @@ export default function AttractionCard({ attraction }: AttractionCardProps) {
           <Button 
             onClick={() => {
               setOpen(false);
-              setShowBooking(true);
+              setShowBookingForm(true);
             }}
             className="w-full mt-4"
           >
@@ -133,12 +133,17 @@ export default function AttractionCard({ attraction }: AttractionCardProps) {
         </DialogContent>
       </Dialog>
 
-      <BookingModal
-        show={showBooking}
-        onClose={() => setShowBooking(false)}
-        item={attraction}
-        type="attraction"
-      />
+      <Dialog open={showBookingForm} onOpenChange={setShowBookingForm}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Book Your Attraction</DialogTitle>
+          </DialogHeader>
+          <AttractionBookingForm 
+            attraction={attraction} 
+            onClose={() => setShowBookingForm(false)}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
