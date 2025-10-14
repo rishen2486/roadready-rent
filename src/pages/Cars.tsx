@@ -56,7 +56,7 @@ const Cars = () => {
     };
   };
 
-  // Fetch cars from Supabase with filters
+  // Fetch cars from Supabase with filters including availability
   const fetchCars = async (filters?: Partial<SearchFilters>) => {
     try {
       let query = supabase
@@ -64,12 +64,11 @@ const Cars = () => {
         .select('*')
         .eq('available', true);
 
-      // Apply country filter if provided
-      if (filters?.country) {
-        query = query.eq('country', filters.country);
-      }
+      // Default to Mauritius if no country filter
+      const country = filters?.country || 'Mauritius';
+      query = query.eq('country', country);
 
-      const { data, error } = await query;
+      const { data: carsData, error } = await query;
 
       if (error) {
         console.error('Error fetching cars:', error);
@@ -78,8 +77,39 @@ const Cars = () => {
           description: "Could not load available cars. Please try again.",
           variant: "destructive",
         });
+        setLoading(false);
+        return;
+      }
+
+      // Filter by date availability if dates are provided
+      if (filters?.pickupDate && filters?.returnDate) {
+        const { data: availabilityData } = await supabase
+          .from('car_availability')
+          .select('car_id, start_date, end_date');
+
+        if (availabilityData) {
+          const unavailableCarIds = new Set<string>();
+          
+          availabilityData.forEach(booking => {
+            const bookingStart = new Date(booking.start_date);
+            const bookingEnd = new Date(booking.end_date);
+            const requestStart = new Date(filters.pickupDate!);
+            const requestEnd = new Date(filters.returnDate!);
+
+            // Check if dates overlap
+            if (requestStart <= bookingEnd && requestEnd >= bookingStart) {
+              unavailableCarIds.add(booking.car_id);
+            }
+          });
+
+          // Filter out unavailable cars
+          const availableCars = carsData?.filter(car => !unavailableCarIds.has(car.id)) || [];
+          setCars(availableCars);
+        } else {
+          setCars(carsData || []);
+        }
       } else {
-        setCars(data || []);
+        setCars(carsData || []);
       }
     } catch (error) {
       console.error('Unexpected error:', error);
@@ -93,7 +123,7 @@ const Cars = () => {
     }
   };
 
-  // Initial load - show all cars by default, filter only when search is used
+  // Initial load - show Mauritius cars by default
   useEffect(() => {
     const urlFilters = getFiltersFromURL();
     const hasFilters = Object.values(urlFilters).some(v => v);
@@ -102,8 +132,8 @@ const Cars = () => {
       setSearchFilters(urlFilters as SearchFilters);
       fetchCars(urlFilters);
     } else {
-      // No filters - show all cars
-      fetchCars();
+      // Default to Mauritius cars
+      fetchCars({ country: 'Mauritius' });
     }
   }, [location.search, toast]);
 

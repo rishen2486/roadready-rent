@@ -7,7 +7,7 @@ import SearchBar, { SearchFilters } from "@/components/search/SearchBar";
 import CarCard from "@/components/cars/CarCard";
 import { BookingForm } from "@/components/BookingForm";
 import Navbar from "@/components/layout/Navbar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -26,6 +26,7 @@ interface Car {
 }
 
 const Index = () => {
+  const navigate = useNavigate();
   const [searchFilters, setSearchFilters] = useState<SearchFilters | null>(null);
   const [featuredCars, setFeaturedCars] = useState<Car[]>([]);
   const [selectedCar, setSelectedCar] = useState<Car | null>(null);
@@ -33,7 +34,7 @@ const Index = () => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  // Fetch all featured cars from Supabase
+  // Fetch featured cars from Mauritius by default
   useEffect(() => {
     const fetchFeaturedCars = async () => {
       setLoading(true);
@@ -42,6 +43,7 @@ const Index = () => {
           .from('cars')
           .select('*')
           .eq('available', true)
+          .eq('country', 'Mauritius')
           .limit(6);
 
         if (error) {
@@ -75,7 +77,7 @@ const Index = () => {
     Object.entries(filters).forEach(([key, value]) => {
       if (value) params.set(key, value);
     });
-    window.location.href = `/cars?${params.toString()}`;
+    navigate(`/cars?${params.toString()}`);
   };
 
   const handleBookNow = (car: Car) => {
