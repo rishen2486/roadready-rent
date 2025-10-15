@@ -34,7 +34,7 @@ const Index = () => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  // Fetch featured cars from Mauritius by default
+  // Fetch all featured cars
   useEffect(() => {
     const fetchFeaturedCars = async () => {
       setLoading(true);
@@ -43,7 +43,6 @@ const Index = () => {
           .from('cars')
           .select('*')
           .eq('available', true)
-          .eq('country', 'Mauritius')
           .limit(6);
 
         if (error) {

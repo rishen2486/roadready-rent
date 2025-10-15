@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -16,6 +17,7 @@ interface Car {
 }
 
 export default function CarList() {
+  const navigate = useNavigate();
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSuperuser, setIsSuperuser] = useState(false);
@@ -140,7 +142,7 @@ export default function CarList() {
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => toast.info("Edit functionality coming soon")}
+                        onClick={() => navigate(`/admin/edit-car/${car.id}`)}
                       >
                         <Pencil className="w-4 h-4" />
                       </Button>
