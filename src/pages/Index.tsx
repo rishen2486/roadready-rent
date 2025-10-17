@@ -34,7 +34,7 @@ const Index = () => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  // Fetch all featured cars
+  // Fetch all cars
   useEffect(() => {
     const fetchFeaturedCars = async () => {
       setLoading(true);
@@ -42,8 +42,7 @@ const Index = () => {
         const { data, error } = await supabase
           .from('cars')
           .select('*')
-          .eq('available', true)
-          .limit(6);
+          .eq('available', true);
 
         if (error) {
           console.error('Error fetching cars:', error);
