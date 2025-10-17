@@ -11,6 +11,7 @@ interface CarCardProps {
     category?: string;
     image?: string;
     image_url?: string;
+    photos?: string[];
     rating?: number;
     reviews?: number;
     passengers?: number;
@@ -25,8 +26,11 @@ interface CarCardProps {
 }
 
 const CarCard = ({ car, onBookNow }: CarCardProps) => {
-  // Handle both old and new data structures
-  const imageUrl = car.image_url || car.image || 'https://images.unsplash.com/photo-1494976688153-9c302e0e1271?w=800&h=600&fit=crop';
+  // Handle both old and new data structures - check photos array first, then image_url, then image
+  const imageUrl = (car.photos && car.photos.length > 0 ? car.photos[0] : null) 
+    || car.image_url 
+    || car.image 
+    || 'https://images.unsplash.com/photo-1494976688153-9c302e0e1271?w=800&h=600&fit=crop';
   const pricePerDay = car.price_per_day || car.pricePerDay || 99;
   const features = car.features || [];
   
