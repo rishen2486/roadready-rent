@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 export default function SignUp() {
   const [name, setName] = useState('');
@@ -13,6 +14,8 @@ export default function SignUp() {
   const [password, setPassword] = useState('');
   const [telephoneNumber, setTelephoneNumber] = useState('');
   const [loading, setLoading] = useState(false);
+  const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -47,6 +50,15 @@ export default function SignUp() {
       toast({
         title: "Password Too Short",
         description: "Password must be at least 6 characters long",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!recaptchaValue) {
+      toast({
+        title: "reCAPTCHA Required",
+        description: "Please complete the reCAPTCHA verification",
         variant: "destructive",
       });
       return;
@@ -151,10 +163,18 @@ export default function SignUp() {
               </p>
             </div>
             
+            <div className="flex justify-center">
+              <ReCAPTCHA
+                ref={recaptchaRef}
+                sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+                onChange={(value) => setRecaptchaValue(value)}
+              />
+            </div>
+            
             <Button 
               type="submit" 
               className="w-full" 
-              disabled={loading}
+              disabled={loading || !recaptchaValue}
               variant="premium"
             >
               {loading ? 'Creating Account...' : 'Create Account'}

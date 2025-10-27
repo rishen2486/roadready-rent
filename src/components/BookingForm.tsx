@@ -11,6 +11,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { DateRange } from 'react-day-picker';
+import { useCurrency } from '@/contexts/CurrencyContext';
 
 interface Car {
   id: string;
@@ -28,6 +29,7 @@ interface BookingFormProps {
 export function BookingForm({ car, onClose }: BookingFormProps) {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { formatPrice, convertPrice } = useCurrency();
   const [loading, setLoading] = useState(false);
   const [bookedDates, setBookedDates] = useState<Date[]>([]);
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
@@ -253,7 +255,7 @@ export function BookingForm({ car, onClose }: BookingFormProps) {
             <div className="bg-primary/10 p-4 rounded-lg space-y-2 mt-4 border border-primary/20">
               <div className="flex justify-between text-sm">
                 <span>Daily Rate:</span>
-                <span className="font-medium">Rs {car.price_per_day}/day</span>
+                <span className="font-medium">{formatPrice(car.price_per_day)}/day</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span>Duration:</span>
@@ -263,7 +265,7 @@ export function BookingForm({ car, onClose }: BookingFormProps) {
               </div>
               <div className="flex justify-between font-bold text-lg pt-2 border-t border-primary/20">
                 <span>Total:</span>
-                <span className="text-primary">Rs {totalAmount}</span>
+                <span className="text-primary">{formatPrice(totalAmount)}</span>
               </div>
             </div>
           )}

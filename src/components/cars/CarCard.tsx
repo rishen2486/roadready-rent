@@ -3,6 +3,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
+import { useCurrency } from "@/contexts/CurrencyContext";
 
 interface CarCardProps {
   car: {
@@ -26,6 +27,8 @@ interface CarCardProps {
 }
 
 const CarCard = ({ car, onBookNow }: CarCardProps) => {
+  const { formatPrice } = useCurrency();
+  
   // Handle both old and new data structures - check photos array first, then image_url, then image
   const imageUrl = (car.photos && car.photos.length > 0 ? car.photos[0] : null) 
     || car.image_url 
@@ -123,7 +126,7 @@ const CarCard = ({ car, onBookNow }: CarCardProps) => {
       <CardFooter className="p-4 pt-0 flex items-center justify-between">
         <div className="text-left">
           <div className="text-2xl font-bold text-foreground">
-            Rs {pricePerDay}
+            {formatPrice(pricePerDay)}
             <span className="text-sm font-normal text-muted-foreground">/day</span>
           </div>
         </div>

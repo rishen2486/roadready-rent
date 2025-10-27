@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useCurrency, Currency } from "@/contexts/CurrencyContext";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface Profile {
   user_id: string;
@@ -21,6 +23,7 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { currency, setCurrency } = useCurrency();
 
   useEffect(() => {
     const getProfile = async () => {
@@ -129,6 +132,20 @@ const Navbar = () => {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-4">
+            {/* Currency Selector */}
+            <Select value={currency} onValueChange={(value) => setCurrency(value as Currency)}>
+              <SelectTrigger className="w-[100px]">
+                <SelectValue placeholder="Currency" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="MUR">MUR</SelectItem>
+                <SelectItem value="ZAR">ZAR</SelectItem>
+                <SelectItem value="GBP">GBP</SelectItem>
+                <SelectItem value="EUR">EUR</SelectItem>
+                <SelectItem value="AUD">AUD</SelectItem>
+              </SelectContent>
+            </Select>
+
             {profile ? (
               <>
                 <span className="text-sm text-muted-foreground">
